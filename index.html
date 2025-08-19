@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorFlip - Hex to RGBA Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f3ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(138, 116, 249, 0.1);
+            padding: 48px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3d3d5c;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8b8b9e;
+            margin-bottom: 48px;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .converter-wrapper {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #3d3d5c;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .format-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: #8a74f9;
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 18px;
+            border: 2px solid #f0f0f5;
+            border-radius: 16px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #fafafe;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #8a74f9;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(138, 116, 249, 0.1);
+        }
+
+        .placeholder-text {
+            color: #999;
+        }
+
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding-top: 80px;
+        }
+
+        .convert-btn {
+            background: #8a74f9;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 28px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+
+        .convert-btn:hover {
+            background: #7c64ea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(138, 116, 249, 0.3);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(138, 116, 249, 0.2);
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #d0d0dd;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 12px;
+            display: none;
+            padding: 10px 14px;
+            background: #fff5f5;
+            border-radius: 10px;
+            border-left: 3px solid #dc3545;
+        }
+
+        .warning-message {
+            color: #856404;
+            font-size: 0.9em;
+            margin-top: 12px;
+            display: none;
+            padding: 10px 14px;
+            background: #fff9e6;
+            border-radius: 10px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .success-message {
+            color: #155724;
+            font-size: 0.9em;
+            margin-top: 12px;
+            display: none;
+            padding: 10px 14px;
+            background: #f0f9f4;
+            border-radius: 10px;
+            border-left: 3px solid #28a745;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            text-align: center;
+            color: #8b8b9e;
+            font-size: 0.9em;
+            background: linear-gradient(to top, #f5f3ff 50%, transparent);
+        }
+
+        .footer a {
+            color: #8b8b9e;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #8a74f9;
+        }
+
+        @media (max-width: 768px) {
+            .converter-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .arrow-container {
+                padding-top: 0;
+                flex-direction: row;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .footer {
+                position: relative;
+                margin-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ColorFlip</h1>
+        <p class="subtitle">Instantly flip between Hex and RGBA color formats</p>
+        
+        <div class="converter-wrapper">
+            <div class="input-section">
+                <div class="section-header">
+                    <h2>Input</h2>
+                    <span class="format-badge" id="inputFormat">HEX</span>
+                </div>
+                <textarea 
+                    id="inputColors" 
+                    placeholder="Enter colors (one per line):&#10;#FF5733&#10;#00FF00&#10;#0000FF&#10;or&#10;rgba(255, 87, 51, 1)&#10;rgba(0, 255, 0, 0.5)"></textarea>
+                <div class="warning-message" id="inputWarning"></div>
+                <div class="error-message" id="inputError"></div>
+            </div>
+            
+            <div class="arrow-container">
+                <button class="convert-btn" id="convertBtn">Convert</button>
+                <span class="arrow">→</span>
+            </div>
+            
+            <div class="input-section">
+                <div class="section-header">
+                    <h2>Output</h2>
+                    <span class="format-badge" id="outputFormat">RGBA</span>
+                </div>
+                <textarea 
+                    id="outputColors" 
+                    placeholder="Converted colors will appear here..."
+                    readonly></textarea>
+                <div class="success-message" id="outputSuccess"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div>&copy; <a href="https://sparkgeo.com" target="_blank" rel="noopener noreferrer">Sparkgeo</a> 2025</div>
+    </footer>
+
+    <script>
+        const inputTextarea = document.getElementById('inputColors');
+        const outputTextarea = document.getElementById('outputColors');
+        const convertBtn = document.getElementById('convertBtn');
+        const inputFormat = document.getElementById('inputFormat');
+        const outputFormat = document.getElementById('outputFormat');
+        const inputError = document.getElementById('inputError');
+        const inputWarning = document.getElementById('inputWarning');
+        const outputSuccess = document.getElementById('outputSuccess');
+
+        // Detect input format
+        function detectInputFormat() {
+            const input = inputTextarea.value.trim();
+            if (!input) {
+                inputFormat.textContent = 'HEX';
+                outputFormat.textContent = 'RGBA';
+                inputWarning.style.display = 'none';
+                return;
+            }
+
+            const lines = input.split('\n').filter(line => line.trim());
+            const firstLine = lines[0].trim();
+            
+            // Check for mixed formats while typing
+            if (checkForMixedFormats(lines)) {
+                inputWarning.textContent = 'Warning: Mixed hex and RGBA formats detected. Conversion will use the first color format.';
+                inputWarning.style.display = 'block';
+            } else {
+                inputWarning.style.display = 'none';
+            }
+            
+            if (firstLine.startsWith('#') || /^[0-9A-Fa-f]{6}$/.test(firstLine)) {
+                inputFormat.textContent = 'HEX';
+                outputFormat.textContent = 'RGBA';
+            } else if (firstLine.toLowerCase().includes('rgba') || firstLine.toLowerCase().includes('rgb')) {
+                inputFormat.textContent = 'RGBA';
+                outputFormat.textContent = 'HEX';
+            }
+        }
+
+        // Convert hex to RGBA
+        function hexToRgba(hex) {
+            // Remove # if present
+            hex = hex.replace('#', '').trim();
+            
+            // Handle 3-digit hex
+            if (hex.length === 3) {
+                hex = hex.split('').map(char => char + char).join('');
+            }
+            
+            // Validate hex
+            if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                throw new Error(`Invalid hex color: ${hex}`);
+            }
+            
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return `rgba(${r}, ${g}, ${b}, 1)`;
+        }
+
+        // Convert RGBA to hex
+        function rgbaToHex(rgba) {
+            // Parse rgba/rgb string
+            const match = rgba.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)/i);
+            
+            if (!match) {
+                throw new Error(`Invalid RGBA color: ${rgba}`);
+            }
+            
+            const r = parseInt(match[1]);
+            const g = parseInt(match[2]);
+            const b = parseInt(match[3]);
+            
+            // Validate RGB values
+            if (r > 255 || g > 255 || b > 255 || r < 0 || g < 0 || b < 0) {
+                throw new Error(`Invalid RGB values: ${rgba}`);
+            }
+            
+            const toHex = (num) => {
+                const hex = num.toString(16).padStart(2, '0');
+                return hex.toUpperCase();
+            };
+            
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        // Check for mixed formats
+        function checkForMixedFormats(lines) {
+            let hasHex = false;
+            let hasRgba = false;
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+                
+                if (trimmed.startsWith('#') || /^[0-9A-Fa-f]{6}$/.test(trimmed)) {
+                    hasHex = true;
+                } else if (trimmed.toLowerCase().includes('rgba') || trimmed.toLowerCase().includes('rgb')) {
+                    hasRgba = true;
+                }
+                
+                if (hasHex && hasRgba) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Convert colors
+        function convertColors() {
+            const input = inputTextarea.value.trim();
+            
+            if (!input) {
+                inputError.textContent = 'Please enter at least one color';
+                inputError.style.display = 'block';
+                outputSuccess.style.display = 'none';
+                inputWarning.style.display = 'none';
+                return;
+            }
+            
+            inputError.style.display = 'none';
+            outputSuccess.style.display = 'none';
+            inputWarning.style.display = 'none';
+            
+            const lines = input.split('\n').filter(line => line.trim());
+            
+            // Check for mixed formats
+            if (checkForMixedFormats(lines)) {
+                inputWarning.textContent = 'Warning: Mixed hex and RGBA formats detected. Converting based on the first color format.';
+                inputWarning.style.display = 'block';
+            }
+            
+            const results = [];
+            const errors = [];
+            
+            const isHexInput = inputFormat.textContent === 'HEX';
+            
+            lines.forEach((line, index) => {
+                const color = line.trim();
+                try {
+                    if (isHexInput) {
+                        results.push(hexToRgba(color));
+                    } else {
+                        results.push(rgbaToHex(color));
+                    }
+                } catch (error) {
+                    errors.push(`Line ${index + 1}: ${error.message}`);
+                    results.push(`// Error: ${color}`);
+                }
+            });
+            
+            outputTextarea.value = results.join('\n');
+            
+            if (errors.length > 0) {
+                inputError.textContent = errors.join('\n');
+                inputError.style.display = 'block';
+            } else {
+                outputSuccess.textContent = `Successfully converted ${results.length} color${results.length > 1 ? 's' : ''}`;
+                outputSuccess.style.display = 'block';
+                setTimeout(() => {
+                    outputSuccess.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Event listeners
+        inputTextarea.addEventListener('input', detectInputFormat);
+        convertBtn.addEventListener('click', convertColors);
+        
+        // Allow Enter key to convert (Shift+Enter for new line)
+        inputTextarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && e.ctrlKey) {
+                e.preventDefault();
+                convertColors();
+            }
+        });
+
+        // Copy output on click
+        outputTextarea.addEventListener('click', () => {
+            if (outputTextarea.value) {
+                outputTextarea.select();
+                document.execCommand('copy');
+                outputSuccess.textContent = 'Copied to clipboard!';
+                outputSuccess.style.display = 'block';
+                setTimeout(() => {
+                    outputSuccess.style.display = 'none';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
