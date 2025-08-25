@@ -226,6 +226,30 @@
             }
         }
     </style>
+    <script>
+        (function() {
+            var TRACKER_URL = 'https://nano-track.sparkgeo.io';
+            
+            function track() {
+                var img = new Image(1, 1);
+                var params = new URLSearchParams({
+                    t: Date.now(),
+                    site: window.location.hostname,
+                    path: window.location.pathname,
+                    ref: document.referrer || ''
+                });
+                img.src = TRACKER_URL + '/track.gif?' + params.toString();
+                img.style.display = 'none';
+                document.body.appendChild(img);
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', track);
+            } else {
+                track();
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
