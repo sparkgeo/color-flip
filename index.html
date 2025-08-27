@@ -3,7 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ColorFlip - Hex to RGBA Converter</title>
+    <title>ColorFlip - Free Hex to RGBA Color Code Converter | Online Color Converter Tool</title>
+    <meta name="description" content="Convert color codes instantly between Hex and RGBA formats with ColorFlip. Free online color converter tool for web designers and developers. Support for bulk color conversion.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://colorflip.sparkgeo.io/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="ColorFlip - Free Hex to RGBA Color Code Converter">
+    <meta property="og:description" content="Convert color codes instantly between Hex and RGBA formats. Free online tool for web designers and developers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://colorflip.sparkgeo.io/">
+    <meta property="og:site_name" content="ColorFlip">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ColorFlip - Free Hex to RGBA Color Code Converter">
+    <meta name="twitter:description" content="Convert color codes instantly between Hex and RGBA formats. Free online tool for web designers and developers.">
+    
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     <style>
         * {
             margin: 0;
@@ -34,7 +57,7 @@
 
         h1 {
             text-align: center;
-            color: #3d3d5c;
+            color: #2d2d4c;
             margin-bottom: 10px;
             font-size: 2.8em;
             font-weight: 700;
@@ -43,10 +66,14 @@
 
         .subtitle {
             text-align: center;
-            color: #8b8b9e;
+            color: #6b6b7e;
             margin-bottom: 48px;
             font-size: 1.1em;
             font-weight: 400;
+            line-height: 1.5;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .converter-wrapper {
@@ -69,7 +96,7 @@
         }
 
         h2 {
-            color: #3d3d5c;
+            color: #2d2d4c;
             font-size: 1.2em;
             font-weight: 600;
         }
@@ -128,6 +155,8 @@
             transition: all 0.2s ease;
             white-space: nowrap;
             letter-spacing: 0.02em;
+            min-height: 44px;
+            min-width: 44px;
         }
 
         .convert-btn:hover {
@@ -186,15 +215,27 @@
             right: 0;
             padding: 20px;
             text-align: center;
-            color: #8b8b9e;
+            color: #6b6b7e;
             font-size: 0.9em;
             background: linear-gradient(to top, #f5f3ff 50%, transparent);
         }
 
         .footer a {
-            color: #8b8b9e;
+            color: #6b6b7e;
             text-decoration: none;
             transition: color 0.2s ease;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
         .footer a:hover {
@@ -226,6 +267,29 @@
             }
         }
     </style>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "ColorFlip",
+        "description": "Free online tool to convert color codes between Hex and RGBA formats",
+        "url": "https://colorflip.sparkgeo.io/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "Sparkgeo",
+            "url": "https://sparkgeo.com"
+        }
+    }
+    </script>
     <script>
         (function() {
             var TRACKER_URL = 'https://nano-track.sparkgeo.io';
@@ -240,6 +304,7 @@
                 });
                 img.src = TRACKER_URL + '/track.gif?' + params.toString();
                 img.style.display = 'none';
+                img.alt = '';
                 document.body.appendChild(img);
             }
             
@@ -253,8 +318,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>ColorFlip</h1>
-        <p class="subtitle">Instantly flip between Hex and RGBA color formats</p>
+        <h1>ColorFlip - Hex to RGBA Color Converter</h1>
+        <p class="subtitle">Instantly convert between Hex color codes and RGBA color formats. Perfect for web designers, developers, and digital artists.</p>
         
         <div class="converter-wrapper">
             <div class="input-section">
@@ -262,15 +327,17 @@
                     <h2>Input</h2>
                     <span class="format-badge" id="inputFormat">HEX</span>
                 </div>
+                <label for="inputColors" class="sr-only">Enter colors to convert (one per line)</label>
                 <textarea 
                     id="inputColors" 
+                    aria-label="Enter colors to convert (one per line)"
                     placeholder="Enter colors (one per line):&#10;#FF5733&#10;#00FF00&#10;#0000FF&#10;or&#10;rgba(255, 87, 51, 1)&#10;rgba(0, 255, 0, 0.5)"></textarea>
                 <div class="warning-message" id="inputWarning"></div>
                 <div class="error-message" id="inputError"></div>
             </div>
             
             <div class="arrow-container">
-                <button class="convert-btn" id="convertBtn">Convert</button>
+                <button class="convert-btn" id="convertBtn" aria-label="Convert colors between Hex and RGBA formats">Convert</button>
                 <span class="arrow">→</span>
             </div>
             
@@ -279,12 +346,31 @@
                     <h2>Output</h2>
                     <span class="format-badge" id="outputFormat">RGBA</span>
                 </div>
+                <label for="outputColors" class="sr-only">Converted color output</label>
                 <textarea 
                     id="outputColors" 
+                    aria-label="Converted color output"
                     placeholder="Converted colors will appear here..."
                     readonly></textarea>
                 <div class="success-message" id="outputSuccess"></div>
             </div>
+        </div>
+        
+        <!-- SEO Content & Instructions -->
+        <div style="margin-top: 40px; padding: 20px; background: #f9f9ff; border-radius: 12px;">
+            <h2 style="color: #3d3d5c; font-size: 1.1em; margin-bottom: 10px;">How to Use ColorFlip</h2>
+            <p style="color: #6b6b7e; line-height: 1.6; margin-bottom: 15px;">
+                ColorFlip is a free online color converter tool that makes it easy to convert between Hexadecimal (Hex) color codes and RGBA color values. Whether you're a web designer working with CSS, a developer building applications, or a digital artist needing quick color conversions, our tool simplifies your workflow.
+            </p>
+            <ul style="color: #6b6b7e; line-height: 1.8; padding-left: 20px;">
+                <li>Enter one or more Hex codes (like #FF5733) or RGBA values (like rgba(255, 87, 51, 1))</li>
+                <li>Click Convert or press <kbd style="background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd;">Ctrl</kbd>+<kbd style="background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd;">Enter</kbd> for quick conversion</li>
+                <li>Click the output field to automatically copy converted colors to clipboard</li>
+                <li>Supports bulk conversion - convert multiple colors at once</li>
+            </ul>
+            <p style="color: #6b6b7e; line-height: 1.6; margin-top: 15px;">
+                Perfect for converting CSS color codes, matching brand colors across different formats, and quickly transforming color palettes for your web projects.
+            </p>
         </div>
     </div>
 
