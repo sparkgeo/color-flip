@@ -375,10 +375,12 @@
     </div>
 
     <footer class="footer">
-        <div>&copy; <a href="https://sparkgeo.com" target="_blank" rel="noopener noreferrer">Sparkgeo</a> 2026</div>
+        <div>&copy; <a href="https://sparkgeo.com" target="_blank" rel="noopener noreferrer">Sparkgeo</a> <span id="copyrightYear"></span></div>
     </footer>
 
     <script>
+        document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
         const inputTextarea = document.getElementById('inputColors');
         const outputTextarea = document.getElementById('outputColors');
         const convertBtn = document.getElementById('convertBtn');
